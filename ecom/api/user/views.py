@@ -28,7 +28,7 @@ def signin(request):
     UserModel = get_user_model()
 
     try:
-        user = UserModel.objects.get(email = username)  
+        user = UserModel.objects.get(email=username)  
         if user.check_password(password):
             usr_dict = UserModel.objects.filter(email= username).values().first()
             usr_dict.pop('password')
@@ -38,7 +38,7 @@ def signin(request):
                 user.save()
                 return JsonResponse({'error':'previous session exists!'})
             
-            token = user.generate_session_token()
+            token = generate_session_token()
             user.session_token = token
             user.save()
             login(request,user)
@@ -59,6 +59,7 @@ def signout(request,id):
         user = UserModel.objects.get(pk=id)
         user.session_token = "0"
         user.save()
+
     except UserModel.DoesNotExist:
         return JsonResponse({'error':'Invaild User ID'})
 
