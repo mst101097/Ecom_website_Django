@@ -1,12 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import ImageHelper from "./helper/ImageHelper";
 import {Redirect} from "react-router-dom";
 import { addItemToCart, removeItemFromCart } from "./helper/cartHelper";
+import { isAuthenticated } from "../auth/helper";
 
-
-const isAuthenticated = true;
-
-//TODO: deal with after
 
 
 const Card = ({
@@ -14,23 +11,23 @@ const Card = ({
     addtoCart = true,
     removeFromCart = true,
 }) => {
-
+  const [redirect, setRedirect] = useState(false);
   const cartTitle = product ? product.name :" A photo from pixels";
   const cartDescription  = product ? product.description :"Default description ";
   const cartPrice = product ? product.price :"Default ";
 
   const addToCart = () =>{
-    if (isAuthenticated) {
-      addItemToCart(product,() => {});
+    if (isAuthenticated()) {
+      addItemToCart(product,() => setRedirect(true));
       console.log("Add to Cart");
-    }else{
+    }else{ 
       console.log("Login first ");
     }
   };
 
-  const getAredirect = redirect =>{
+  const getAredirect = (redirect) =>{
     if (redirect) {
-      <Redirect to= "/cart"/> 
+      return <Redirect to ="/cart" />;
     }
 };
   const showAddToCart = addToCart =>{
@@ -52,23 +49,26 @@ const Card = ({
                <button
                 onClick={() => {
                   removeItemFromCart(product._id);
+                 // setReload(!reload);
+                  //console.log("Product removed from cart");
                 }}
                 className="btn btn-block btn-outline-danger mt-2 mb-2"
               >
                 Remove from cart
               </button>
       )
-    )
-  }
+    );
+  };
     return (
       <div className="card text-white bg-dark border border-info ">
         <div className="card-header lead">{cartTitle}</div>
         <div className="card-body">
+          {getAredirect(redirect)}
           <ImageHelper product= {product}/>
           <p className="lead bg-success font-weight-normal text-wrap">
             {cartDescription}
           </p>
-          <p className="btn btn-success rounded  btn-sm px-4">{cartPrice}</p>
+          <p className="btn btn-success rounded  btn-sm px-4"> $ {cartPrice}</p>
           <div className="row">
             <div className="col-12">
               {showAddToCart(addToCart)}
