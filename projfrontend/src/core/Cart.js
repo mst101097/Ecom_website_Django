@@ -2,14 +2,17 @@ import React,{ useState, useEffect} from "react";
 import Base from "./Base";
 import Card from "./Card"
 import { loadCart } from "./helper/cartHelper";
+import PaymentB from "./PaymentB";
 
 const Cart = () =>{
+
+    const [reload,setReload] = useState(false); 
 
     const [products,setProducts] = useState([]);
 
     useEffect(() =>{
         setProducts(loadCart());
-    },[]);
+    },[reload]);
 
 
     const loadAllProducts = (products) =>{
@@ -21,6 +24,8 @@ const Cart = () =>{
                     product = {product}
                     removeFromCart = {true}
                     addtoCart = {false}
+                    reload = {reload}
+                    setReload = {setReload}
                 />
             ))}
         </div>
@@ -46,7 +51,13 @@ const Cart = () =>{
                 {loadAllProducts(products)}
             </div>
             <div className ="col-6" >
-                {loadCheckout()}
+                {products.length > 0 ?
+                 (
+                    <PaymentB products = {products} setReload = {setReload}  />
+                ) : 
+                (
+                    <h3> Please  Add something in Cart  </h3>
+                )}
             </div>
 
        </div>

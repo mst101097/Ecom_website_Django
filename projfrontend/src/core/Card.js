@@ -9,7 +9,9 @@ import { isAuthenticated } from "../auth/helper";
 const Card = ({
     product,
     addtoCart = true,
-    removeFromCart = true,
+    removeFromCart = false,
+    reload = undefined,
+    setReload = (f) => f,
 }) => {
   const [redirect, setRedirect] = useState(false);
   const cartTitle = product ? product.name :" A photo from pixels";
@@ -32,7 +34,7 @@ const Card = ({
 };
   const showAddToCart = addToCart =>{
     return(
-      addToCart && (
+      addtoCart && (
         <button
         onClick={addToCart}
         className="btn btn-block btn-outline-success mt-2 mb-2"
@@ -48,8 +50,8 @@ const Card = ({
       removeFromCart && (
                <button
                 onClick={() => {
-                  removeItemFromCart(product._id);
-                 // setReload(!reload);
+                  removeItemFromCart(product.id);
+                 setReload(!reload);
                   //console.log("Product removed from cart");
                 }}
                 className="btn btn-block btn-outline-danger mt-2 mb-2"
